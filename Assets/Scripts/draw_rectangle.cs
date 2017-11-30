@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class draw_rectangle : MonoBehaviour
 {
-
 	public float cellSize = 4f;
 	public float indent = 0.1f;
 	public float lineWith = 0.1f;
@@ -16,9 +15,17 @@ public class draw_rectangle : MonoBehaviour
 	private int cellCount;
 	private int cellResolution;
 	private bool[] cellState;
-
-
 	public GameObject prefab;
+
+    public int CellResolution
+    {
+        get { return cellResolution; }
+    }
+    public bool[] CellState
+    {
+        get { return cellState; }
+    }
+
 
 	Terrain mainTerrain;
 	Vector3 position;
@@ -48,22 +55,22 @@ public class draw_rectangle : MonoBehaviour
 		Debug.Log (position);
 		Debug.Log (resolution);
 
-		shareVertice = new Vector3[4];
-		shareVertice [0] = position;
-		shareVertice [2] = position + new Vector3 (resolution.x, position.y, resolution.y);
-		shareVertice [1] = new Vector3 (shareVertice [2].x, position.y, shareVertice [0].z);
-		shareVertice [3] = new Vector3 (shareVertice [0].x, position.y, shareVertice [2].z);
-		indice = new int[6];
-		indice [0] = 0;
-		indice [1] = 2;
-		indice [2] = 1;
-		indice [3] = 0;
-		indice [4] = 3;
-		indice [5] = 2;
+        shareVertice = new Vector3[4];
+        shareVertice[0] = position;
+        shareVertice[2] = position + new Vector3(resolution.x, position.y, resolution.y);
+        shareVertice[1] = new Vector3(shareVertice[2].x, position.y, shareVertice[0].z);
+        shareVertice[3] = new Vector3(shareVertice[0].x, position.y, shareVertice[2].z);
+        indice = new int[6];
+        indice[0] = 0;
+        indice[1] = 2;
+        indice[2] = 1;
+        indice[3] = 0;
+        indice[4] = 3;
+        indice[5] = 2;
 
-		mesh = new Mesh ();
-        
-		gameObject.transform.position = position;
+        mesh = new Mesh();
+
+        gameObject.transform.position = position;
 
 		cellMesh = new Mesh ();
 		float Y = position.y;
@@ -86,51 +93,68 @@ public class draw_rectangle : MonoBehaviour
 				float Zend = Zstart + cellSize;
 
 				int index = i * cellResolution + j;
-				cellState [index] = true;
 
-				int cellIndex = 8 * index;
-				cellVertice [cellIndex] = new Vector3 (Xstart + indent, Y, Zstart + indent);
-				cellVertice [cellIndex + 1] = new Vector3 (Xend - indent, Y, Zstart + indent);
-				cellVertice [cellIndex + 2] = new Vector3 (Xend - innerIndent, Y, Zstart + innerIndent);
-				cellVertice [cellIndex + 3] = new Vector3 (Xstart + innerIndent, Y, Zstart + innerIndent);
+                int value = (int)Random.Range(0, 100f);
+                if (value < 85)
+                    cellState[index] = true;
+                else
+                    cellState[index] = false ;
 
-				cellVertice [cellIndex + 4] = new Vector3 (Xstart + innerIndent, Y, Zend - innerIndent);
-				cellVertice [cellIndex + 5] = new Vector3 (Xend - innerIndent, Y, Zend - innerIndent);
-				cellVertice [cellIndex + 6] = new Vector3 (Xend - indent, Y, Zend - indent);
-				cellVertice [cellIndex + 7] = new Vector3 (Xstart + indent, Y, Zend - indent);
-				int indiceIndex = 24 * index;
-				cellIndice [indiceIndex] = cellIndex;
-				cellIndice [indiceIndex + 1] = cellIndex + 2;
-				cellIndice [indiceIndex + 2] = cellIndex + 1;
-				cellIndice [indiceIndex + 3] = cellIndex;
-				cellIndice [indiceIndex + 4] = cellIndex + 3;
-				cellIndice [indiceIndex + 5] = cellIndex + 2;
+    //            int cellIndex = 8 * index;
+				//cellVertice [cellIndex] = new Vector3 (Xstart + indent, Y, Zstart + indent);
+				//cellVertice [cellIndex + 1] = new Vector3 (Xend - indent, Y, Zstart + indent);
+				//cellVertice [cellIndex + 2] = new Vector3 (Xend - innerIndent, Y, Zstart + innerIndent);
+				//cellVertice [cellIndex + 3] = new Vector3 (Xstart + innerIndent, Y, Zstart + innerIndent);
 
-				cellIndice [indiceIndex + 6] = cellIndex + 1;
-				cellIndice [indiceIndex + 7] = cellIndex + 2;
-				cellIndice [indiceIndex + 8] = cellIndex + 6;
-				cellIndice [indiceIndex + 9] = cellIndex + 2;
-				cellIndice [indiceIndex + 10] = cellIndex + 5;
-				cellIndice [indiceIndex + 11] = cellIndex + 6;
+				//cellVertice [cellIndex + 4] = new Vector3 (Xstart + innerIndent, Y, Zend - innerIndent);
+				//cellVertice [cellIndex + 5] = new Vector3 (Xend - innerIndent, Y, Zend - innerIndent);
+				//cellVertice [cellIndex + 6] = new Vector3 (Xend - indent, Y, Zend - indent);
+				//cellVertice [cellIndex + 7] = new Vector3 (Xstart + indent, Y, Zend - indent);
 
-				cellIndice [indiceIndex + 12] = cellIndex + 4;
-				cellIndice [indiceIndex + 13] = cellIndex + 6;
-				cellIndice [indiceIndex + 14] = cellIndex + 5;
-				cellIndice [indiceIndex + 15] = cellIndex + 4;
-				cellIndice [indiceIndex + 16] = cellIndex + 7;
-				cellIndice [indiceIndex + 17] = cellIndex + 6;
+    //            int indiceIndex = 24 * index;
+    //            if (cellState[index])
+    //            {
+    //                cellIndice[indiceIndex] = cellIndex;
+    //                cellIndice[indiceIndex + 1] = cellIndex + 2;
+    //                cellIndice[indiceIndex + 2] = cellIndex + 1;
+    //                cellIndice[indiceIndex + 3] = cellIndex;
+    //                cellIndice[indiceIndex + 4] = cellIndex + 3;
+    //                cellIndice[indiceIndex + 5] = cellIndex + 2;
 
-				cellIndice [indiceIndex + 18] = cellIndex;
-				cellIndice [indiceIndex + 19] = cellIndex + 7;
-				cellIndice [indiceIndex + 20] = cellIndex + 3;
-				cellIndice [indiceIndex + 21] = cellIndex + 3;
-				cellIndice [indiceIndex + 22] = cellIndex + 7;
-				cellIndice [indiceIndex + 23] = cellIndex + 4;
+    //                cellIndice[indiceIndex + 6] = cellIndex + 1;
+    //                cellIndice[indiceIndex + 7] = cellIndex + 2;
+    //                cellIndice[indiceIndex + 8] = cellIndex + 6;
+    //                cellIndice[indiceIndex + 9] = cellIndex + 2;
+    //                cellIndice[indiceIndex + 10] = cellIndex + 5;
+    //                cellIndice[indiceIndex + 11] = cellIndex + 6;
+
+    //                cellIndice[indiceIndex + 12] = cellIndex + 4;
+    //                cellIndice[indiceIndex + 13] = cellIndex + 6;
+    //                cellIndice[indiceIndex + 14] = cellIndex + 5;
+    //                cellIndice[indiceIndex + 15] = cellIndex + 4;
+    //                cellIndice[indiceIndex + 16] = cellIndex + 7;
+    //                cellIndice[indiceIndex + 17] = cellIndex + 6;
+
+    //                cellIndice[indiceIndex + 18] = cellIndex;
+    //                cellIndice[indiceIndex + 19] = cellIndex + 7;
+    //                cellIndice[indiceIndex + 20] = cellIndex + 3;
+    //                cellIndice[indiceIndex + 21] = cellIndex + 3;
+    //                cellIndice[indiceIndex + 22] = cellIndex + 7;
+    //                cellIndice[indiceIndex + 23] = cellIndex + 4;
+    //            }
+    //            else
+    //            {
+    //                for(int k=0;k<24;++k)
+    //                {
+    //                    cellIndice[indiceIndex + k] = 0;
+    //                }
+    //            }
+				
 			}
 		}
-		mesh.vertices = cellVertice;
-		mesh.triangles = cellIndice;
-		gameObject.GetComponent<MeshFilter> ().sharedMesh = mesh;
+		//mesh.vertices = cellVertice;
+		//mesh.triangles = cellIndice;
+		//gameObject.GetComponent<MeshFilter> ().sharedMesh = mesh;
 	}
 
 	void disable_indice (int index)
@@ -199,17 +223,16 @@ public class draw_rectangle : MonoBehaviour
 
 				if (cellState [index]) {
 					cellState [index] = false;
-					disable_indice (index);
+					//disable_indice (index);
 					Debug.Log ("disable");
 				} else {
 					cellState [index] = true;
 					Debug.Log ("able");
-					able_index (index);
+					//able_index (index);
 				}
 			}
 
 			GameObject.Instantiate (prefab, targetPos, Quaternion.identity);
 		}
-		
 	}
 }
