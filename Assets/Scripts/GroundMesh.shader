@@ -11,7 +11,7 @@
 
 		Pass
 		{
-			ZTest Always
+			//ZTest Always
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

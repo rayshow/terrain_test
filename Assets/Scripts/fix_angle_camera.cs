@@ -47,32 +47,32 @@ public class fix_angle_camera : MonoBehaviour {
                 oldPosition = Input.GetTouch(0).position;
                 mainCamera.transform.position += 0.03f * new Vector3(-deltaPosition.x, 0, -deltaPosition.y);
             }
-            
-            
         }
-        //if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
-        //{
-        //    moved = false;
-        //}
-
-
-       //if (Input.GetMouseButtonDown(0))
-       //     mouseDown = true;
-       // else if (Input.GetMouseButtonUp(0))
-       //     mouseDown = false;
+#if UNITY_STANDALONE
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended)
+        {
+            moved = false;
+        }
         
-       // float scroll = Input.GetAxis("Mouse ScrollWheel");
-       // float Y = mainCamera.transform.position.y;
-       // if ((scroll > 0.0001 || scroll < -0.0001) &&( Y-scroll <=max_distance && Y-scroll >=min_distance  ))
-       // {
-       //     mainCamera.transform.position += new Vector3(0, -scroll, 0);
-       // }
+        if (Input.GetMouseButtonDown(0))
+            mouseDown = true;
+        else if (Input.GetMouseButtonUp(0))
+            mouseDown = false;
 
-       // if (mouseDown)
-       // {
-       //     float x = Input.GetAxis("Mouse X");
-       //     float y = Input.GetAxis("Mouse Y");
-       //     mainCamera.transform.position += new Vector3(-x, 10*scroll, -y);
-       // }
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float Y = mainCamera.transform.position.y;
+        if ((scroll > 0.0001 || scroll < -0.0001) && (Y - scroll <= max_distance && Y - scroll >= min_distance))
+        {
+            mainCamera.transform.position += new Vector3(0, -scroll, 0);
+        }
+
+        if (mouseDown)
+        {
+            float x = Input.GetAxis("Mouse X");
+            float y = Input.GetAxis("Mouse Y");
+            mainCamera.transform.position += new Vector3(-x, 10 * scroll, -y);
+        }
+#endif
     }
+
 }
