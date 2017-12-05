@@ -26,62 +26,35 @@ public class TerrainCellsDisplay : MonoBehaviour
     {
         get { return cellState; }
     }
-
-
-	Terrain mainTerrain;
+    
 	Vector3 position;
-	Bounds bounds;
-	Vector2 resolution;
-	Mesh mesh;
 	Mesh cellMesh;
 
+    private SceneManager manager;
+    void SetManager(SceneManager mg)
+    {
+        manager = mg;
+    }
+
 	// Use this for initialization
-	void Start ()
+	public void initalize (SceneManager mg)
 	{
-		mainTerrain = Terrain.activeTerrain;
-		if (mainTerrain == null) {
-			Debug.LogError ("main Terrain not found");
-			return;
-		}
+        manager = mg;
+
 		if (GetComponent<MeshFilter> () == null) {
 			Debug.LogError ("need a mesh filter of this GameObject");
 			return;
 		}
         
-		position = mainTerrain.transform.position;
-		bounds = mainTerrain.terrainData.bounds;
-        
-		Vector3 box = bounds.extents * 2;
-		resolution = new Vector2 (box.x, box.z);
-		Debug.Log (position);
-		Debug.Log (resolution);
-
-        shareVertice = new Vector3[4];
-        shareVertice[0] = position;
-        shareVertice[2] = position + new Vector3(resolution.x, position.y, resolution.y);
-        shareVertice[1] = new Vector3(shareVertice[2].x, position.y, shareVertice[0].z);
-        shareVertice[3] = new Vector3(shareVertice[0].x, position.y, shareVertice[2].z);
-        indice = new int[6];
-        indice[0] = 0;
-        indice[1] = 2;
-        indice[2] = 1;
-        indice[3] = 0;
-        indice[4] = 3;
-        indice[5] = 2;
-
-        mesh = new Mesh();
-
-        gameObject.transform.position = position;
-
 		cellMesh = new Mesh ();
 		float Y = position.y+0.1f;
-		float Xmin = position.x;
-		float Xmax = position.x + resolution.x;
-		float Zmin = position.z;
-		float Zmax = position.z + resolution.y;
+		float Xmin = 0;
+		float Xmax = manager.cellSize;
+        float Zmin = 0;
+		float Zmax = manager.cellSize;
 
-		cellResolution = (int)Mathf.Floor (resolution.x / cellSize);
-		cellCount = cellResolution * cellResolution;
+        cellResolution = manager.cellsPerTerrainBlock;
+        cellCount = cellResolution * cellResolution;
 		cellVertice = new Vector3[8 * cellCount];
 		cellIndice = new int[24 * cellCount];
 		cellState = new bool[cellCount];
@@ -99,7 +72,7 @@ public class TerrainCellsDisplay : MonoBehaviour
                 if (value < 85)
                     cellState[index] = true;
                 else
-                    cellState[index] = false ;
+                    cellState[index] = false;
 
                 if(display_cells)
                 {
@@ -158,9 +131,9 @@ public class TerrainCellsDisplay : MonoBehaviour
 
         if(display_cells)
         {
-            mesh.vertices = cellVertice;
-            mesh.triangles = cellIndice;
-            gameObject.GetComponent<MeshFilter>().sharedMesh = mesh;
+            cellMesh.vertices = cellVertice;
+            cellMesh.triangles = cellIndice;
+            gameObject.GetComponent<MeshFilter>().sharedMesh = cellMesh;
         }
 
     }
@@ -171,7 +144,7 @@ public class TerrainCellsDisplay : MonoBehaviour
 		for (int i = 0; i < 24; ++i) {
 			cellIndice [index + i] = 0;
 		}
-		mesh.triangles = cellIndice;
+        cellMesh.triangles = cellIndice;
 	}
 
 	void able_index (int index)
@@ -205,7 +178,7 @@ public class TerrainCellsDisplay : MonoBehaviour
 		cellIndice [indiceIndex + 21] = cellIndex + 3;
 		cellIndice [indiceIndex + 22] = cellIndex + 7;
 		cellIndice [indiceIndex + 23] = cellIndex + 4;
-		mesh.triangles = cellIndice;
+        cellMesh.triangles = cellIndice;
 	}
     
 	
@@ -216,7 +189,7 @@ public class TerrainCellsDisplay : MonoBehaviour
 			Resolution r = Screen.currentResolution;
 			Vector3 screenPos = Input.mousePosition;
    
-			Debug.Log (screenPos);
+			//Debug.Log (screenPos);
 
 			Ray ray = Camera.main.ScreenPointToRay (screenPos);
             
@@ -225,7 +198,7 @@ public class TerrainCellsDisplay : MonoBehaviour
 
 			int offsetX = (int)Mathf.Floor ((targetPos.x - position.x) / cellSize);
 			int offsetZ = (int)Mathf.Floor ((targetPos.z - position.z) / cellSize);
-			Debug.Log (offsetX + " " + offsetZ + " " + cellCount);
+			//Debug.Log (offsetX + " " + offsetZ + " " + cellCount);
 			if (offsetX < cellResolution && offsetZ < cellResolution && offsetX >= 0 && offsetZ >= 0) {
 				int index = offsetX * cellResolution + offsetZ;
 
@@ -242,7 +215,7 @@ public class TerrainCellsDisplay : MonoBehaviour
 				//}
 			}
 
-			GameObject.Instantiate (prefab, targetPos, Quaternion.identity);
+			//GameObject.Instantiate (prefab, targetPos, Quaternion.identity);
 		}
 	}
 }

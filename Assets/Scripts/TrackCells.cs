@@ -174,6 +174,8 @@ public class TrackCells : MonoBehaviour {
 
         SetVector2(ref paddingMin, cellSize*minMapXOffset, cellSize*minMapZOffset);
         SetVector2(ref paddingMax, cellSize*maxMapXOffset, cellSize*maxMapZOffset);
+
+        //manager.GetVisualCells(paddingMin, widthCellCount, heightCellCount, ref bCellDisplay);
     }
 
 
